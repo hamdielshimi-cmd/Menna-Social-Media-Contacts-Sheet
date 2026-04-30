@@ -435,7 +435,7 @@
   // ═══════════════════════════════════════════════════════════
   //  CONFIG — CHANGE THIS VALUE TO YOUR DEPLOYED WEB APP URL
   // ═══════════════════════════════════════════════════════════
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcoOzqQslXIx1Dlo5RKCMPZsw71qPGKDP8XA0SHbMhcOhyW792aHETVWUinfrRY36eig/exec";
+  const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
   // ═══════════════════════════════════════════════════════════
 
   // Auto-hide config banner if URL is set
@@ -475,10 +475,15 @@
     btn.textContent = "Sending…";
 
     try {
+      // Use FormData (no Content-Type header) to avoid CORS preflight on Apps Script
+      const form = new FormData();
+      form.append("name",  name);
+      form.append("phone", phone);
+      form.append("note",  note);
+
       const res = await fetch(APPS_SCRIPT_URL, {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ name, phone, note })
+        method: "POST",
+        body:   form
       });
 
       const data = await res.json();
@@ -529,7 +534,7 @@
     }
 
     try {
-      const res  = await fetch(APPS_SCRIPT_URL + "?action=get");
+      const res  = await fetch(APPS_SCRIPT_URL + "?action=get&t=" + Date.now());
       const data = await res.json();
 
       if (!data.success || !data.leads) {
