@@ -111,7 +111,15 @@ export function getStatusLabel(status: TrafficLightStatus): string {
 }
 
 export const DISPATCHER_NUMBERS = {
-  amr: '201234567890', // Placeholder
-  eman: '201234567891', // Placeholder
-  menna: '201156732768',
+  amr: '+201234567890', // Placeholder - replace with actual Amr number
+  eman: '+201234567891', // Placeholder - replace with actual Eman number
+  menna: '+201156732768',
+}
+
+export function cleanPhoneNumber(phone: string): string {
+  // Remove all spaces, dashes, parentheses, and other non-digit characters
+  // Keep the + if present
+  const hasPlus = phone.startsWith('+')
+  const digits = phone.replace(/\D/g, '')
+  return hasPlus ? `+${digits}` : digits
 }

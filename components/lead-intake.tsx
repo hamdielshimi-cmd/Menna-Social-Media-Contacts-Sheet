@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { toast } from 'sonner'
-import { DISPATCHER_NUMBERS } from '@/lib/types'
+import { DISPATCHER_NUMBERS, cleanPhoneNumber } from '@/lib/types'
 
 interface LeadIntakeProps {
   onLeadAdded: () => void
@@ -97,9 +97,10 @@ export function LeadIntake({ onLeadAdded }: LeadIntakeProps) {
       const data = await response.json()
       if (data.success) {
         toast.success(`Lead dispatched to ${dispatcherName}`)
-        // Open WhatsApp
+        // Open WhatsApp with cleaned phone numbers
+        const cleanedDispatcherNumber = cleanPhoneNumber(whatsappNumber)
         const whatsappMessage = `New lead: ${name} - ${phone}${note ? ` - Note: ${note}` : ''}`
-        const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`
+        const waUrl = `https://wa.me/${cleanedDispatcherNumber}?text=${encodeURIComponent(whatsappMessage)}`
         window.open(waUrl, '_blank')
       } else {
         toast.error(data.error || 'Failed to dispatch lead')
